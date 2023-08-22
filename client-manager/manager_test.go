@@ -25,7 +25,6 @@ func TestClientManager(t *testing.T) {
 	gc, err := client.NewClient(client.Config{
 		Name:      "eth-mainnet",
 		URL:       "https://eth-mainnet.g.alchemy.com/v2/Awv8GOY7AVq9KfdpxQ6Uo7aaRAf6Lq39",
-		NetworkID: 1,
 		Currency:  "ETH",
 		IsTestnet: false,
 	})
@@ -36,7 +35,6 @@ func TestClientManager(t *testing.T) {
 	oc, err := client.NewClient(client.Config{
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/jV0Mv2QaFbSUrS11K8ZsLSkjAy6xoTPj",
-		NetworkID: 420,
 		Currency:  "ETH",
 		IsTestnet: true,
 	})
@@ -77,7 +75,6 @@ func TestClientManagerSend(t *testing.T) {
 	oc, err := client.NewClient(client.Config{
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/jV0Mv2QaFbSUrS11K8ZsLSkjAy6xoTPj",
-		NetworkID: 420,
 		Currency:  "ETH",
 		IsTestnet: true,
 	})
@@ -146,7 +143,6 @@ func TestClientManagerBatchSend(t *testing.T) {
 	oc, err := client.NewClient(client.Config{
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/jV0Mv2QaFbSUrS11K8ZsLSkjAy6xoTPj",
-		NetworkID: 420,
 		Currency:  "ETH",
 		IsTestnet: true,
 	})

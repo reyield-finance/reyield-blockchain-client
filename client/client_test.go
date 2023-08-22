@@ -20,7 +20,6 @@ func TestGenericClient(t *testing.T) {
 	cli, err := client.NewClient(client.Config{
 		Name:      "eth-mainnet",
 		URL:       "https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY",
-		NetworkID: 1,
 		Currency:  "ETH",
 		IsTestnet: false,
 	})
@@ -28,7 +27,6 @@ func TestGenericClient(t *testing.T) {
 
 	assert.Equal(t, cli.Name(), "eth-mainnet", "should be equal")
 	assert.Equal(t, cli.URL(), "https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY", "should be equal")
-	assert.Equal(t, cli.CNetworkID(), uint64(1), "should be equal")
 	assert.Equal(t, cli.Currency(), "ETH", "should be equal")
 	assert.Equal(t, cli.IsTestnet(), false, "should be equal")
 
@@ -196,7 +194,6 @@ func TestPolygonClient(t *testing.T) {
 	cli, err := client.NewClient(client.Config{
 		Name:      "polygon-pos-testnet",
 		URL:       "https://polygon-mumbai.g.alchemy.com/v2/YOUR_API_KEY",
-		NetworkID: 80001,
 		Currency:  "MATIC",
 		IsTestnet: true,
 	})
@@ -371,7 +368,6 @@ func TestPolygonClientSendTransaction(t *testing.T) {
 	cli, err := client.NewClient(client.Config{
 		Name:      "polygon-pos-testnet",
 		URL:       "https://polygon-mumbai.g.alchemy.com/v2/YOUR_API_KEY",
-		NetworkID: 80001,
 		Currency:  "MATIC",
 		IsTestnet: true,
 	})
@@ -423,7 +419,6 @@ func TestOptimismClient(t *testing.T) {
 	cli, err := client.NewClient(client.Config{
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/YOUR_API_KEY",
-		NetworkID: 420,
 		Currency:  "ETH",
 		IsTestnet: true,
 	})
@@ -598,7 +593,6 @@ func TestOptimismClientSendTransaction(t *testing.T) {
 	cli, err := client.NewClient(client.Config{
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/YOUR_API_KEY",
-		NetworkID: 420,
 		Currency:  "ETH",
 		IsTestnet: true,
 	})
@@ -650,7 +644,6 @@ func TestArbitrumClient(t *testing.T) {
 	cli, err := client.NewClient(client.Config{
 		Name:      "arbitrum-testnet",
 		URL:       "https://arb-goerli.g.alchemy.com/v2/YOUR_API_KEY",
-		NetworkID: 421613,
 		Currency:  "ETH",
 		IsTestnet: true,
 	})
@@ -829,7 +822,6 @@ func TestArbitrumClientSendTransaction(t *testing.T) {
 	cli, err := client.NewClient(client.Config{
 		Name:      "arbitrum-testnet",
 		URL:       "https://arb-goerli.g.alchemy.com/v2/YOUR_API_KEY",
-		NetworkID: 421613,
 		Currency:  "ETH",
 		IsTestnet: true,
 	})
@@ -882,7 +874,6 @@ func TestOptimismBatchSend(t *testing.T) {
 	cli, err := client.NewClient(client.Config{
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/jV0Mv2QaFbSUrS11K8ZsLSkjAy6xoTPj",
-		NetworkID: 420,
 		Currency:  "ETH",
 		IsTestnet: true,
 	})
