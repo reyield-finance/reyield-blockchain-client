@@ -1,4 +1,4 @@
-module github.com/reyield-blockchain-client
+module github.com/reyield-finance/reyield-blockchain-client
 
 go 1.19
 
