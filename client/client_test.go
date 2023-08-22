@@ -876,3 +876,47 @@ func TestArbitrumClientSendTransaction(t *testing.T) {
 		log.Fatalf("Failed to send transaction: %v", err)
 	}
 }
+
+func TestOptimismBatchSend(t *testing.T) {
+
+	cli, err := client.NewClient(client.Config{
+		Name:      "optimism-testnet",
+		URL:       "https://opt-goerli.g.alchemy.com/v2/jV0Mv2QaFbSUrS11K8ZsLSkjAy6xoTPj",
+		NetworkID: 420,
+		Currency:  "ETH",
+		IsTestnet: true,
+	})
+
+	toAddress := common.Address{}
+
+	cfg := client.TxConfig{
+		PrivateKey: "46eef390f6df8c5e66afbfed0a4399cffe88446300ecec003aad301dcab170b5",
+		GasLimit:   uint64(21000),
+	}
+	meta := []client.TxRequest{
+		{
+			ToAddress: toAddress,
+			Value:     big.NewInt(1000000000000),
+			Data:      nil,
+		},
+		{
+			ToAddress: toAddress,
+			Value:     big.NewInt(500000000000),
+			Data:      nil,
+		},
+		{
+			ToAddress: toAddress,
+			Value:     big.NewInt(250000000000),
+			Data:      nil,
+		},
+		{
+			ToAddress: toAddress,
+			Value:     big.NewInt(125000000000),
+			Data:      nil,
+		},
+	}
+
+	count, err := cli.BatchSend(context.Background(), cfg, meta)
+	assert.Nil(t, err)
+	assert.Equal(t, 4, count)
+}

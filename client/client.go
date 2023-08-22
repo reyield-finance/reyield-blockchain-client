@@ -2,14 +2,19 @@ package client
 
 import (
 	"context"
+	"crypto/ecdsa"
+	"log"
 	"math/big"
+	"sync"
 	"time"
 
 	ge "github.com/ethereum-optimism/optimism/op-service/client"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/reyield-blockchain-client/errors"
 )
 
 type client interface {
@@ -136,4 +141,104 @@ func (c *Client) Currency() string {
 
 func (c *Client) IsTestnet() bool {
 	return c.isTestnet
+}
+
+type TxConfig struct {
+	PrivateKey string
+	GasLimit   uint64
+	GasPrice   *big.Int
+}
+
+type TxRequest struct {
+	ToAddress common.Address
+	Value     *big.Int
+	Data      []byte
+}
+
+type TxResponse struct {
+	SuccessCount int
+	Txs          []*types.Transaction
+	Errs         []error
+}
+
+func (c *Client) BatchSend(ctx context.Context, cfg TxConfig, txs []TxRequest) (res *TxResponse, err error) {
+
+	privateKey, err := crypto.HexToECDSA(cfg.PrivateKey)
+	if err != nil {
+		err = errors.ErrPrivateKeyInvalid
+		return
+	}
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		log.Fatal("Cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+	}
+
+	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+	if cfg.GasLimit == 0 {
+		cfg.GasLimit = 21000
+	}
+
+	if cfg.GasPrice == nil {
+		cfg.GasPrice, err = c.SuggestGasPrice(ctx)
+		if err != nil {
+			err = errors.ErrGetGasPriceFailed
+			return
+		}
+	}
+
+	nonce, err := c.PendingNonceAt(ctx, fromAddress)
+	if err != nil {
+		err = errors.ErrGetNonceFailed
+		return
+	}
+
+	var (
+		wg   sync.WaitGroup
+		lock sync.RWMutex
+	)
+
+	res = &TxResponse{
+		Txs: make([]*types.Transaction, len(txs)),
+	}
+
+	sendTx := func(i int, tx TxRequest) {
+		wrapTx := types.NewTransaction(nonce+uint64(i), tx.ToAddress, tx.Value, cfg.GasLimit, cfg.GasPrice, tx.Data)
+		signedTx, txErr := types.SignTx(
+			wrapTx,
+			types.NewEIP155Signer(big.NewInt(int64(c.networkID))),
+			privateKey,
+		)
+		if txErr != nil {
+			lock.RLock()
+			res.Errs = append(res.Errs, txErr)
+			lock.RUnlock()
+		}
+		txErr = c.SendTransaction(ctx, signedTx)
+		if txErr != nil {
+			lock.RLock()
+			res.Errs = append(res.Errs, txErr)
+			lock.RUnlock()
+		}
+		res.Txs[i] = signedTx
+
+		wg.Done()
+	}
+
+	for i, tx := range txs {
+		wg.Add(1)
+
+		go sendTx(i, tx)
+	}
+
+	wg.Wait()
+
+	res.SuccessCount = len(txs) - len(res.Errs)
+	if len(res.Errs) > 0 {
+		err = errors.ErrBatchSendTransactionFailed
+		return
+	}
+
+	return
 }

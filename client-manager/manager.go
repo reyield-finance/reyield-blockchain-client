@@ -7,12 +7,14 @@ import (
 
 func NewClientManager() *ClientManager {
 	return &ClientManager{
-		Clients: make(map[string]*client.Client),
+		Clients:        make(map[string]*client.Client),
+		FailedRequests: make([]client.TxRequest, 0),
 	}
 }
 
 type ClientManager struct {
-	Clients map[string]*client.Client
+	Clients        map[string]*client.Client
+	FailedRequests []client.TxRequest
 }
 
 func (cm *ClientManager) AddClient(name string, client *client.Client) error {
@@ -34,4 +36,10 @@ func (cm *ClientManager) RemoveClient(name string) {
 	}
 	cm.Clients[name].Close()
 	delete(cm.Clients, name)
+}
+
+func (cm *ClientManager) Close() {
+	for _, c := range cm.Clients {
+		c.Close()
+	}
 }
