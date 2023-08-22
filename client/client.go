@@ -14,7 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/reyield-blockchain-client/errors"
+	"github.com/reyield-finance/reyield-blockchain-client/errors"
 )
 
 type client interface {

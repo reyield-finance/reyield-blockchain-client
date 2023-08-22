@@ -10,8 +10,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/reyield-blockchain-client/client"
-	cmgr "github.com/reyield-blockchain-client/client-manager"
+	"github.com/reyield-finance/reyield-blockchain-client/client"
+	cmgr "github.com/reyield-finance/reyield-blockchain-client/client-manager"
 	"github.com/stretchr/testify/assert"
 )
 

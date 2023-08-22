@@ -1,8 +1,8 @@
 package clientmanager
 
 import (
-	"github.com/reyield-blockchain-client/client"
-	"github.com/reyield-blockchain-client/errors"
+	"github.com/reyield-finance/reyield-blockchain-client/client"
+	"github.com/reyield-finance/reyield-blockchain-client/errors"
 )
 
 func NewClientManager() *ClientManager {
