@@ -26,6 +26,7 @@ func TestClientManager(t *testing.T) {
 		Name:      "eth-mainnet",
 		URL:       "https://eth-mainnet.g.alchemy.com/v2/Awv8GOY7AVq9KfdpxQ6Uo7aaRAf6Lq39",
 		Currency:  "ETH",
+		NetworkID: 1,
 		IsTestnet: false,
 	})
 	assert.Nil(t, err)
@@ -36,6 +37,7 @@ func TestClientManager(t *testing.T) {
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/jV0Mv2QaFbSUrS11K8ZsLSkjAy6xoTPj",
 		Currency:  "ETH",
+		NetworkID: 420,
 		IsTestnet: true,
 	})
 	assert.Nil(t, err)
@@ -144,6 +146,7 @@ func TestClientManagerBatchSend(t *testing.T) {
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/jV0Mv2QaFbSUrS11K8ZsLSkjAy6xoTPj",
 		Currency:  "ETH",
+		NetworkID: 1,
 		IsTestnet: true,
 	})
 	assert.Nil(t, err)

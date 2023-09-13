@@ -195,6 +195,7 @@ func TestPolygonClient(t *testing.T) {
 		Name:      "polygon-pos-testnet",
 		URL:       "https://polygon-mumbai.g.alchemy.com/v2/YOUR_API_KEY",
 		Currency:  "MATIC",
+		NetworkID: 80001,
 		IsTestnet: true,
 	})
 	assert.Nil(t, err, "should not error")
@@ -369,6 +370,7 @@ func TestPolygonClientSendTransaction(t *testing.T) {
 		Name:      "polygon-pos-testnet",
 		URL:       "https://polygon-mumbai.g.alchemy.com/v2/YOUR_API_KEY",
 		Currency:  "MATIC",
+		NetworkID: 80001,
 		IsTestnet: true,
 	})
 
@@ -420,6 +422,7 @@ func TestOptimismClient(t *testing.T) {
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/YOUR_API_KEY",
 		Currency:  "ETH",
+		NetworkID: 420,
 		IsTestnet: true,
 	})
 

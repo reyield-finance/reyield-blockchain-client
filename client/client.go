@@ -92,6 +92,7 @@ type Config struct {
 	Name      string
 	URL       string
 	Currency  string
+	NetworkID uint64
 	IsTestnet bool
 }
 
@@ -101,13 +102,7 @@ func NewClient(c Config) (*Client, error) {
 		err error
 	)
 
-	chainID, err := cli.NetworkID(context.Background())
-	if err != nil {
-		return nil, err
-	}
-
-	networkID := chainID.Uint64()
-	if networkID == 10 || networkID == 420 {
+	if c.NetworkID == 10 || c.NetworkID == 420 {
 		cli, err = ge.DialEthClientWithTimeout(context.Background(), c.URL, time.Duration(100*time.Millisecond))
 	} else {
 		cli, err = ethclient.Dial(c.URL)
@@ -121,7 +116,7 @@ func NewClient(c Config) (*Client, error) {
 		client:    cli,
 		name:      c.Name,
 		url:       c.URL,
-		networkID: networkID,
+		networkID: c.NetworkID,
 		currency:  c.Currency,
 		isTestnet: c.IsTestnet,
 	}, nil
