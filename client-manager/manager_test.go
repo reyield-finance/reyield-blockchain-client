@@ -3,6 +3,7 @@ package clientmanager_test
 import (
 	"context"
 	"crypto/ecdsa"
+	"fmt"
 	"log"
 	"math/big"
 	"testing"
@@ -146,7 +147,7 @@ func TestClientManagerBatchSend(t *testing.T) {
 		Name:      "optimism-testnet",
 		URL:       "https://opt-goerli.g.alchemy.com/v2/jV0Mv2QaFbSUrS11K8ZsLSkjAy6xoTPj",
 		Currency:  "ETH",
-		NetworkID: 1,
+		NetworkID: 420,
 		IsTestnet: true,
 	})
 	assert.Nil(t, err)
@@ -185,7 +186,34 @@ func TestClientManagerBatchSend(t *testing.T) {
 		},
 	}
 
-	count, err := oc.BatchSend(context.Background(), cfg, meta)
+	res, err := oc.BatchSend(context.Background(), cfg, meta)
 	assert.Nil(t, err)
-	assert.Equal(t, 4, count)
+	assert.Equal(t, 4, res.SuccessCount)
+}
+
+func TestMultipleClientsForSingleChain(t *testing.T) {
+	mgr := cmgr.NewClientManager()
+	assert.NotNil(t, mgr)
+
+	numOfClients := 3
+
+	for i := 0; i < numOfClients; i++ {
+		c, err := client.NewClient(
+			client.Config{
+				Name:      fmt.Sprintf("eth-client-%d", i),
+				URL:       "https://eth-mainnet.g.alchemy.com/v2/Awv8GOY7AVq9KfdpxQ6Uo7aaRAf6Lq39",
+				Currency:  "ETH",
+				NetworkID: 1,
+				IsTestnet: false,
+			},
+		)
+		assert.Nil(t, err)
+		assert.Nil(t, mgr.AddClient("ethereum", c))
+	}
+
+	for i := 0; i < 10; i++ {
+		c := mgr.GetClient("ethereum")
+		assert.NotNil(t, c)
+		assert.Equal(t, fmt.Sprintf("eth-client-%d", i%numOfClients), c.Name())
+	}
 }
